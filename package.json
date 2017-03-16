@@ -4,7 +4,9 @@
   "description": "",
   "main": "empty.js",
   "dependencies": {
+    "ejs": "^2.5.6",
     "express": "^4.15.2",
+    "express-ejs-layouts": "^2.2.0",
     "nodemon": "^1.11.0"
   },
   "devDependencies": {
