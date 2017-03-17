@@ -19,8 +19,22 @@ function generateRandomString() {
   return randomNumber;
 }
 
+app.post("/urls/:shortURL/update", (req, res) => {
+  let longUrl = req.body.longUrl;
+  let shortURL = req.params.shortURL;
+  urlDatabase[shortURL] = longUrl;
+  res.redirect("/urls");
+});
+
+app.post("/urls/:shortURL/delete", (req, res) => {
+    delete urlDatabase[req.params.shortURL];
+  console.log("Url has been Deleted");
+  res.redirect('/urls');
+});
+
 app.get("/u/:shortURL", (req, res) => {
-  // let longURL = ...
+  let shortURL = req.params.shortURL;
+  let longURL = urlDatabase[shortURL];
   res.redirect(longURL);
 });
 

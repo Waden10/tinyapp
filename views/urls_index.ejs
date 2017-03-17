@@ -5,9 +5,12 @@
 </head>
 <body>
     <!-- Add your EJS code here -->
+
     <% for(var shorturl in urls) { %>
       <div><%= shorturl %> <%= urls[shorturl] %> </div>
+      <a href="/urls/<%=shorturl%>">Edit</a>
+      <form method="POST" action="/urls/<%=shorturl%>/delete"><button type="submit">Delete</button></form>
     <% } %>
-    <% include ./partials/_header %>
+    <!-- <% include ./partials/_header %> -->
 </body>
 </html>
