@@ -1,6 +1,6 @@
 var express = require("express");
 var app = express();
-var PORT = process.env.PORT || 8080; // default port 8080
+var PORT = process.env.PORT || 8080;
 
 app.set("view engine", "ejs");
 
@@ -12,6 +12,9 @@ var urlDatabase = {
   "9sm5xK": "http://www.google.com"
 };
 
+
+
+
 function generateRandomString() {
 
   var randomNumber = new Date().getTime().toString(36);
@@ -19,23 +22,15 @@ function generateRandomString() {
   return randomNumber;
 }
 
+app.post("/login", (req, res) => {
+  res.cookie("username", req.body.username);
+  res.redirect("/");
+});
+
 app.post("/urls/:shortURL/update", (req, res) => {
   let longUrl = req.body.longUrl;
-  let shortURL = req.params.shortURL;
-  urlDatabase[shortURL] = longUrl;
-  res.redirect("/urls");
-});
-
-app.post("/urls/:shortURL/delete", (req, res) => {
-    delete urlDatabase[req.params.shortURL];
-  console.log("Url has been Deleted");
-  res.redirect('/urls');
-});
-
-app.get("/u/:shortURL", (req, res) => {
-  let shortURL = req.params.shortURL;
-  let longURL = urlDatabase[shortURL];
-  res.redirect(longURL);
+  let shortRL;
+  res.redirect(longURL); x
 });
 
 app.get("/urls/new", (req, res) => {
@@ -45,11 +40,10 @@ app.get("/urls/new", (req, res) => {
 app.post("/urls", (req, res) => {
   var shortURL = generateRandomString();
   var longURL = req.body.longURL;
-  urlDatabase[shortURL] = longURL
+  urlDatabase[shortURL] = longURL;
   // console.log(req.body);  // debug statement to see POST parameters
   // res.send("Ok");         // Respond with 'Ok' (we will replace this)
-  res.redirect('/urls')
-
+  res.redirect('/urls');
 });
 
 app.get("/", (req, res) => {
