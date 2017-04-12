@@ -29,9 +29,23 @@ app.post("/login", (req, res) => {
 
 app.post("/urls/:shortURL/update", (req, res) => {
   let longUrl = req.body.longUrl;
-  let shortRL;
-  res.redirect(longURL); x
+  let shortURL = req.params.shortURL;
+  urlDatabase[shortURL] = longUrl;
+  res.redirect("/urls");
 });
+
+app.post("/urls/:shortURL/delete", (req, res) => {
+    delete urlDatabase[req.params.shortURL];
+  console.log("Url has been Deleted");
+  res.redirect('/urls');
+});
+
+app.get("/u/:shortURL", (req, res) => {
+  let shortURL = req.params.shortURL;
+  let longURL = urlDatabase[shortURL];
+  res.redirect(longURL);
+});
+
 
 app.get("/urls/new", (req, res) => {
   res.render("urls_new");
