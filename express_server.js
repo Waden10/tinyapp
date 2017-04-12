@@ -80,6 +80,25 @@ app.get("/urls.json", (req, res) => {
   res.json(urlDatabase);
 });
 
+app.get("/urls", (req, res) => {
+  tinyapp.getURLS(dbInstance, (err, result) => {
+    if (err) {
+      console.log(err);
+    }
+
+    let templateVars = {
+      username: req.cookies["username"],
+      urls: result
+    }
+    res.render("urls_index", templateVars);
+  });
+});
+
+app.post("/logout", (req, res) => {
+  res.clearCookie("username");
+  res.redirect("/");
+});
+
 app.get("/hello", (req, res) => {
   res.end("<html><body>Hello <b>World</b></body></html>\n");
 });
