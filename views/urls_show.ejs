@@ -5,12 +5,10 @@
 </head>
 <body>
     <!-- Add your EJS code here -->
-    <div><%= shortURL %> <%= longUrl %></div>
+    <div><%= shortURL %><%= longUrl %></div>
     <form method="POST" action="/urls/<%=shortURL%>/update">
       <button type="submit">Update</button>
-      <input type="text" name="longUrl" value="<%=longUrl%>"/>
-    </form>
+      <input type="text" name="longUrl" value="<%=longUrl%>"/></form>
     <% include ./partials/_header %>
 </body>
 </html>
-
