@@ -4,6 +4,9 @@
   <title>TinyApp</title>
 </head>
 <body>
+  <header>
+    <% include ./partials/_header %>
+  </header>
     <!-- Add your EJS code here -->
 
     <% for(var shorturl in urls) { %>
@@ -11,7 +14,6 @@
       <a href="/urls/<%=shorturl%>">Edit</a>
       <form method="POST" action="/urls/<%=shorturl%>/delete"><button type="submit">Delete</button></form>
     <% } %>
-    <!-- <% include ./partials/_header %> -->
+   
 </body>
 </html>
-
