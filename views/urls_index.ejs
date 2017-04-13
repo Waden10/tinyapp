@@ -6,9 +6,11 @@
 <body>
   <header>
     <% include ./partials/_header %>
+    <% if (username) { %>
+      <div><%=username%></div>
+    <% } %>
   </header>
     <!-- Add your EJS code here -->
-
     <% for(var shorturl in urls) { %>
       <div><%= shorturl %> <%= urls[shorturl] %> </div>
       <a href="/urls/<%=shorturl%>">Edit</a>
