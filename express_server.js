@@ -4,6 +4,9 @@ var PORT = process.env.PORT || 8080;
 
 app.set("view engine", "ejs");
 
+const cookieParser = require("cookie-parser");
+app.use(cookieParser());
+
 const bodyParser = require("body-parser");
 app.use(bodyParser.urlencoded({extended: true}));
 
@@ -65,9 +68,16 @@ app.get("/", (req, res) => {
 });
 
 app.get("/urls", (req, res) => {
-  let templateVars = { urls: urlDatabase };
-  res.render("urls_index", templateVars);
-});
+    let templateVars = { 
+      urls : urlDatabase,
+      username: req.cookies ? req.cookies.username : undefined
+      
+      // username: req.cookies["username"],
+      // urls: result,
+      // myVar: 'christian'
+    };
+    res.render("urls_index", templateVars);
+  });
 
 app.get("/urls/:id", (req, res) => {
   let shortURL = req.params.id;
@@ -78,20 +88,6 @@ app.get("/urls/:id", (req, res) => {
 
 app.get("/urls.json", (req, res) => {
   res.json(urlDatabase);
-});
-
-app.get("/urls", (req, res) => {
-  tinyapp.getURLS(dbInstance, (err, result) => {
-    if (err) {
-      console.log(err);
-    }
-
-    let templateVars = {
-      username: req.cookies["username"],
-      urls: result
-    }
-    res.render("urls_index", templateVars);
-  });
 });
 
 app.post("/logout", (req, res) => {
