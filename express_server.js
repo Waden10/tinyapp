@@ -1,11 +1,22 @@
 var express = require("express");
 var app = express();
 var PORT = process.env.PORT || 8080;
-
-app.set("view engine", "ejs");
+var users = require('./users');
+var bcrypt = require('bcrypt');
+const cookieSession = require('cookie-session')
+const hash = require('./hashing')
 
 const bodyParser = require("body-parser");
 app.use(bodyParser.urlencoded({extended: true}));
+
+app.use(cookieSession({
+  name: 'session',
+  keys: ['lighthouse']
+}));
+
+
+app.set("view engine", "ejs");
+
 
 var urlDatabase = {
   "b2xVn2": "http://www.lighthouselabs.ca",
@@ -14,17 +25,28 @@ var urlDatabase = {
 
 
 
-
 function generateRandomString() {
 
-  var randomNumber = new Date().getTime().toString(36);
+  let randomNumber = new Date().getTime().toString(36);
 
   return randomNumber;
 }
 
+app.get("/login", (req, res) => {
+  res.render("login")
+})
+
 app.post("/login", (req, res) => {
-  res.cookie("username", req.body.username);
-  res.redirect("/");
+  const { email, password } = req.body;
+  const user = users.find(usr => (usr.email === email && usr.password === password));
+  if(user) {
+    res.cookie("user_id", user.id);
+    res.redirect("/");
+  } else {
+    res.status(403);
+    res.send("you goofed")
+    res.redirect("/login")
+  }
 });
 
 app.post("/urls/:shortURL/update", (req, res) => {
@@ -52,8 +74,8 @@ app.get("/urls/new", (req, res) => {
 });
 
 app.post("/urls", (req, res) => {
-  var shortURL = generateRandomString();
-  var longURL = req.body.longURL;
+  let shortURL = generateRandomString();
+  let longURL = req.body.longURL;
   urlDatabase[shortURL] = longURL;
   // console.log(req.body);  // debug statement to see POST parameters
   // res.send("Ok");         // Respond with 'Ok' (we will replace this)
@@ -75,6 +97,44 @@ app.get("/urls/:id", (req, res) => {
   let templateVars = { shortURL: req.params.id, longUrl: longUrl };
   res.render("urls_show", templateVars);
 });
+
+app.get("/register", (req, res) => {
+  res.render("urls_register");
+});
+
+app.post("/register", (req, res) => {
+  const { user_id, email, password } = req.body;
+
+    //if user_id or e-mail or password = '' then respond with '400'
+  if (user_id === '' || email === '' || password === '') {
+    res.redirect(400, "/register");
+  } else {
+    let hashedPassword = bcrypt.hashSync(req.body.password, 10)
+    let password = hashedPassword;
+
+    let randomID = generateRandomString();
+    let newUser = {id: randomID, 
+                  name: user_id, 
+                  email,
+                  password: hashedPassword 
+                }
+    console.log('newuser', newUser);
+    users.push(newUser);
+    res.cookie("user_id", newUser.id);
+
+    // req.session.user_id = randomID;
+    //   req.session.user_id = user_id;
+    res.redirect("/urls");
+  }
+
+});
+
+app.post("/logout", (req, res) => {
+  delete req.session.user_id;
+  res.redirect('/login');
+});
+
+
 
 app.get("/urls.json", (req, res) => {
   res.json(urlDatabase);
