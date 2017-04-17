@@ -1,14 +1,12 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
   <title>TinyApp</title>
-</head>
 <body>
     <!-- Add your EJS code here -->
-    <div><%= shortURL %><%= longUrl %></div>
-    <form method="POST" action="/urls/<%=shortURL%>/update">
-      <button type="submit">Update</button>
-      <input type="text" name="longUrl" value="<%=longUrl%>"/></form>
     <% include ./partials/_header %>
+      <h1><%= shortURL %><%= longUrl %></h1>
+        <form method="POST" action="/urls/<%=shortURL%>/update">
+          <button type="submit">Update</button>
+          <input type="text" name="longUrl" value="<%=longUrl%>"/></form>
 </body>
 </html>
